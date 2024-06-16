@@ -50,9 +50,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function calculateDaysAgo(date) {
-    const [dateStr, hourStr] = date.split(" ");
-    const [day, month, year] = dateStr.split("/").map(Number);
-    const [hour, minute, second] = hourStr.split(":").map(Number);
+    const [dateStr, hourStr] = date.split("T");
+    const [year, month, day] = dateStr.split("-").map(Number);
+    const [timeStr, gmt] = hourStr.split("-");
+    const [hour, minute, second] = timeStr.split(":").map(Number);
     const publishDate = new Date(year, month - 1, day, hour, minute, second);
     const now = new Date();
     const diffMillis = now - publishDate;
