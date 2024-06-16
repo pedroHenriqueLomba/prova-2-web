@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function init() {
     getNews();
-    buildPagination();
+    reBuildPagination();
     setSearchFunction();
     setFilterFunction();
   }
@@ -67,6 +67,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function reBuildPagination(){
+    const paginator = document.getElementById("paginator");
+    paginator.innerHTML = "";
+    buildPagination();
+  }
+
   function buildPagination() {
     const paginator = document.getElementById("paginator");
     const currentPage =
@@ -112,14 +118,11 @@ document.addEventListener("DOMContentLoaded", () => {
     return urlText;
   }
 
-  function unsetAllFilters() {
-    localStorage.removeItem("filters");
-  }
-
   function unsetFilter(key) {
-    const filters = getFilters();
-    const newFilters = filters.filter((filter) => filter.key !== key);
-    localStorage.setItem("filters", JSON.stringify(newFilters));
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.delete(key);
+    window.history.replaceState(null, null, `?${urlParams.toString()}`);
+    getNews();
   }
 
   function setFilter(newFilter) {
@@ -137,6 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set(newFilter.key, newFilter.value);
     window.history.replaceState(null, null, `?${urlParams.toString()}`);
+    reBuildPagination();
   }
 
   function setSearchFunction() {
